@@ -26,10 +26,11 @@ def load_and_resample_wav(path: str, sample_rate: int=0) -> pd.DataFrame:
     return df
 
 
-def create_RAVDESS_df_with_labels(RAVDESS_path: str, sample_rate: int = 0) -> pd.DataFrame:
+def create_RAVDESS_df_with_labels(RAVDESS_path: str, sample_rate: int=0) -> pd.DataFrame:
     df = pd.DataFrame(columns=['audio', 'label'])
     for actor in tqdm(os.listdir(RAVDESS_path)):
-        if actor.startswith("Actor") and os.path.isdir(actor):
-            temp_df = load_and_resample_wav(str(os.getcwd()+'/'+actor), sample_rate)
+        actor_path = os.path.join(RAVDESS_path, actor)
+        if actor.startswith("Actor") and os.path.isdir(actor_path):
+            temp_df = load_and_resample_wav(actor_path, sample_rate)
             df = pd.concat([df, temp_df], ignore_index=True)
     return df
