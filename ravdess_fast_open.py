@@ -6,8 +6,27 @@ from tqdm import tqdm
 from google.colab import drive
 from IPython.display import Audio
 
+# """
+# RAVDESS explain:
+# 03-01-06-01-02-01-12.wav
+# modality = (01 = full-AV, 02 = video-only, 03 = audio-only)
+# vocal_channel = (01 = speech, 02 = song)
+# emotion:
+#
+# 01 = neutral,
+# 02 = calm,
+# 03 = happy,
+# 04 = sad,
+# 05 = angry,
+# 06 = fearful,
+# 07 = disgust,
+# 08 = surprised
+# emotional intensity = (01 = normal, 02 = strong)
+# statement, repetiotion, actor.
+# """
 
-def load_and_resample_wav(path: str, sample_rate: int=0) -> pd.DataFrame:
+
+def load_and_resample_wav(path: str, sample_rate: int = 0) -> pd.DataFrame:
     """
     load and resample audio files from given path
     """
@@ -18,6 +37,7 @@ def load_and_resample_wav(path: str, sample_rate: int=0) -> pd.DataFrame:
             if parts[0] == '03' and parts[1] == '01' and parts[2] in ['01', '02', '03', '04', '05', '06', '07', '08'] and parts[3] in ['01', '02']:
                 #  exctract emotion label
                 emotion = int(filename.split('-')[2])-1
+
                 # load and resample wav
                 y, _ = librosa.load(os.path.join(path, filename), sr=48000)
                 if sample_rate != 0:
@@ -26,7 +46,7 @@ def load_and_resample_wav(path: str, sample_rate: int=0) -> pd.DataFrame:
     return df
 
 
-def create_RAVDESS_df_with_labels(RAVDESS_path: str, sample_rate: int=0) -> pd.DataFrame:
+def create_RAVDESS_df_with_labels(RAVDESS_path: str, sample_rate: int = 0) -> pd.DataFrame:
     df = pd.DataFrame(columns=['audio', 'label'])
     for actor in tqdm(os.listdir(RAVDESS_path)):
         actor_path = os.path.join(RAVDESS_path, actor)
