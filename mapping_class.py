@@ -85,7 +85,7 @@ class DatasetModelMapper:
         if model == 'HuBERT_eng':
             df = self.mapping_result(dataset, model, df)
         else:
-            df = df.copy
+            df = df.copy()
         df.labels = df.labels.astype(int)
         df.predicted = df.predicted.astype(int)
         accuracy = accuracy_score(df.labels, df.predicted)
@@ -98,10 +98,10 @@ class DatasetModelMapper:
         recall_per_class = recall_score(df.labels, df.predicted, average=None)
         print(f"{model} metrics on {dataset}")
         print("******")
-        print(f"Accuracy: {accuracy}")
-        print(f"F1 Score: {f1_weighted}")
-        print(f"Precision: {precision_weighted}")
-        print(f"Recall: {recall_weighted}")
+        print(f"Accuracy: {round(accuracy,4)}")
+        print(f"F1 Score: {round(f1_weighted, 4)}")
+        print(f"Precision: {round(precision_weighted, 4)}")
+        print(f"Recall: {round(recall_weighted, 4)}")
 
         print("\nMetrics per class:")
         for class_idx, (f1, prec, rec) in enumerate(zip(f1_per_class, precision_per_class, recall_per_class)):

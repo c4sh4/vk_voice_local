@@ -4,7 +4,7 @@ import pandas as pd
 import torch.nn as nn
 from tqdm import tqdm
 from transformers.file_utils import ModelOutput
-from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2ForSpeechClassification, AutoConfig
+from transformers import Wav2Vec2FeatureExtractor, AutoConfig
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss, functional as F
 from transformers.models.wav2vec2.modeling_wav2vec2 import (
     Wav2Vec2PreTrainedModel,
@@ -207,21 +207,20 @@ def run_inference_on_dataframe(df: pd.DataFrame, model, feature_extractor, confi
     Returns:
         DataFrame with predictions.
     """
+    df['predicted'] = None
+    df['predicted_scores'] = None
     for index, row in tqdm(df.iterrows(), total=df.shape[0]):
         audio_data = row['audio']
         predicted_label, scores, _ = predict_emotion(model, feature_extractor, config, device, audio_data)
-        df.at[index, 'predicted_label'] = predicted_label
+        df.at[index, 'predicted'] = predicted_label
         df.at[index, 'predicted_scores'] = scores
     return df
 
 
-if __name__ == "__main__":
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model, feature_extractor, config, sampling_rate = load_model(device)
-
-    df_for_soxan = ...  # Load your DataFrame here
-    df_for_soxan['predicted_label'] = None
-    df_for_soxan['predicted_scores'] = None
-
-    df_for_soxan = run_inference_on_dataframe(df_for_soxan, model, feature_extractor, config, device)
-    print(df_for_soxan)
+# if __name__ == "__main__":
+#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#     model, feature_extractor, config, sampling_rate = load_model(device)
+#     df_for_soxan =
+#
+#     df_for_soxan = run_inference_on_dataframe(df_for_soxan, model, feature_extractor, config, device)
+#     print(df_for_soxan)
