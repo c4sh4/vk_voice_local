@@ -127,6 +127,8 @@ class HubertForSpeechClassification(HubertPreTrainedModel):
             attentions=outputs.attentions,
         )
 
+# Legacy ended here
+
 
 def load_hubert_model() -> Tuple[HubertForSpeechClassification, Wav2Vec2FeatureExtractor, AutoConfig, torch.device]:
     """

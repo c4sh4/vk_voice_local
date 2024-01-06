@@ -84,7 +84,7 @@ def create_dataframe_from_npy(directory: str) -> pd.DataFrame:
             label_num = mapping_iemocap_dict.get(label_text, -1)
             # Добавление данных в список
             data.append([np_array, session_type, label_text, label_num])
-    df = pd.DataFrame(data, columns=['np_array', 'session_type', 'labels_text', 'labels'])
+    df = pd.DataFrame(data, columns=['audio', 'session_type', 'labels_text', 'labels'])
     return df
 
 
