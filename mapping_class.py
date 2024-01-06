@@ -53,7 +53,7 @@ class DatasetModelMapper:
             },
             'IEMOCAP': {
                 'Wav2Vec2_eng': [],
-                'HuBERT_eng': [],
+                'HuBERT_eng': ["neutral", "angry", "sad", "happy", "surprised", "fearful", "disgust"],
                 'WavLM_eng': []
             }
         }
@@ -96,7 +96,8 @@ class DatasetModelMapper:
         f1_per_class = f1_score(df.labels, df.predicted, average=None)
         precision_per_class = precision_score(df.labels, df.predicted, average=None, zero_division=0)
         recall_per_class = recall_score(df.labels, df.predicted, average=None)
-
+        print(f"{model} metrics on {dataset}")
+        print("******")
         print(f"Accuracy: {accuracy}")
         print(f"F1 Score: {f1_weighted}")
         print(f"Precision: {precision_weighted}")
