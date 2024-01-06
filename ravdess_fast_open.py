@@ -41,8 +41,8 @@ def load_and_resample_wav(path: str, sample_rate: int = 0) -> pd.DataFrame:
                 # load and resample wav
                 y, _ = librosa.load(os.path.join(path, filename), sr=48000)
                 if sample_rate != 0:
-                  y = librosa.resample(y=y, orig_sr=48000, target_sr=sample_rate)
-                df.loc[len(df)] = {'audio': y, 'label': emotion}
+                    y = librosa.resample(y=y, orig_sr=48000, target_sr=sample_rate)
+                df.loc[len(df)] = {'audio': y, 'labels': emotion}
     return df
 
 
