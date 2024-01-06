@@ -58,19 +58,33 @@ def write_session(annotations_dir: str, audio_dir: str, output_dir: str) -> None
 
 
 def create_dataframe_from_npy(directory: str) -> pd.DataFrame:
-    """
-    :param directory:
-    :return:
-    """
     data = []
+    mapping_iemocap_dict = {
+        'neu': 0,
+        'fru': 1,
+        'ang': 2,
+        'sad': 3,
+        'hap': 4,
+        'exc': 5,
+        'sur': 6,
+        'oth': 7,
+        'fea': 8,
+        'dis': 9
+    }
+    # Перебор всех файлов в директории
     for file in os.listdir(directory):
         if file.endswith('.npy'):
+            # Загрузка массива NumPy
             np_array = np.load(os.path.join(directory, file))
+
+            # Извлечение информации из имени файла
             parts = file.split('_')
-            session_type = parts[1]
-            label = parts[-1].replace('.npy', '')
-            data.append([np_array, session_type, label])
-    df = pd.DataFrame(data, columns=['np.Array', 'SessionType', 'Label'])
+            session_type = parts[1]  # 'impro' или 'script'
+            label_text = parts[-1].replace('.npy', '')  # Метка эмоции
+            label_num = mapping_iemocap_dict.get(label_text, -1)
+            # Добавление данных в список
+            data.append([np_array, session_type, label_text, label_num])
+    df = pd.DataFrame(data, columns=['np_array', 'session_type', 'labels_text', 'labels'])
     return df
 
 

@@ -1,10 +1,20 @@
 import torch
-import numpy as np
 import pandas as pd
-from transformers import Wav2Vec2FeatureExtractor, HubertForSpeechClassification, AutoConfig
-from torch import nn
+import numpy as np
+import torch.nn as nn
+import torch.nn.functional as F
+from google.colab import drive
+from IPython.display import Audio
+from dataclasses import dataclass
+from typing import Optional, Tuple
+from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
+from transformers.file_utils import ModelOutput
+from transformers import  Wav2Vec2FeatureExtractor, AutoConfig
+from transformers.models.hubert.modeling_hubert import (
+    HubertPreTrainedModel,
+    HubertModel
+)
 from typing import Tuple, List, Any
-
 
 # The legacy of the model's author
 @dataclass
@@ -133,7 +143,7 @@ def load_hubert_model() -> Tuple[HubertForSpeechClassification, Wav2Vec2FeatureE
 
 
 def classify_emotion(sound_array: np.ndarray, sampling_rate: int, model: HubertForSpeechClassification,
-                     feature_extractor: Wav2Vec2FeatureExtractor, config: AutoConfig, device: torch.device) -> str:
+                     feature_extractor: Wav2Vec2FeatureExtractor, config: AutoConfig, device: torch.device) -> int:
     """
     Classifies the emotion based on audio data.
 
@@ -146,7 +156,7 @@ def classify_emotion(sound_array: np.ndarray, sampling_rate: int, model: HubertF
         device: The device on which the model is executed.
 
     Returns:
-        Predicted emotion label as a string.
+        Predicted emotion label as an int.
     """
     inputs = feature_extractor(sound_array, sampling_rate=sampling_rate, return_tensors="pt", padding=True)
     inputs = {key: value.to(device) for key, value in inputs.items()}
@@ -155,13 +165,13 @@ def classify_emotion(sound_array: np.ndarray, sampling_rate: int, model: HubertF
         logits = model(**inputs).logits
 
     scores = nn.functional.softmax(logits, dim=1).detach().cpu().numpy()[0]
-    predicted_label = np.argmax(scores)
-    return config.id2label[predicted_label]
+    predicted_label = int(np.argmax(scores))
+    return predicted_label
 
 
 def run_hubert_inference(df: pd.DataFrame, model: HubertForSpeechClassification,
                          feature_extractor: Wav2Vec2FeatureExtractor, config: AutoConfig, device: torch.device) -> List[
-    str]:
+    int]:
     """
     Runs HuBERT model inference on a DataFrame containing audio data.
 
