@@ -48,12 +48,12 @@ class DatasetModelMapper:
         self.class_names = {
             'RAVDESS': {
                 'Wav2Vec2_eng': ["angry", "disgust", "fearful", "happy", "sad"],
-                'HuBERT_eng': ["neutral", "happy", "sad", "angry", "fearful", "disgust", "surprised"],
+                'HuBERT_eng': ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprised"],
                 'WavLM_eng': []
             },
             'IEMOCAP': {
-                'Wav2Vec2_eng': [],
-                'HuBERT_eng': ["neutral", "angry", "sad", "happy", "surprised", "fearful", "disgust"],
+                'Wav2Vec2_eng': ["angry", "disgust", "fearful", "happy", "sad"],
+                'HuBERT_eng': ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprised"],
                 'WavLM_eng': []
             }
         }
